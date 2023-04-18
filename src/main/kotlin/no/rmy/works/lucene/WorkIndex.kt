@@ -12,6 +12,7 @@ import no.rmy.works.oss.schema.Chapter
 import no.rmy.works.oss.schema.Paragraph
 import no.rmy.works.oss.schema.Role
 import no.rmy.works.oss.schema.Work
+import org.apache.lucene.queryparser.classic.QueryParser
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -87,11 +88,11 @@ class WorkIndex {
         dv(28000)
     }
 
-    fun search(q: String, filter: String? = null, index: Index = Index.paragraphs): TopDocs {
-        val ms = managedSearcher(Index.paragraphs)
-        val analyzer: Analyzer = WhitespaceAnalyzer()
-        //val parser = QueryParser("plainText", analyzer)
-        val field = "plainText"
+    fun search(q: String, filter: String? = null, field: String = "plainText", index: Index = Index.paragraphs): TopDocs {
+        val ms = managedSearcher(index)
+        //val analyzer: Analyzer = WhitespaceAnalyzer()
+        //val parser = QueryParser(field, analyzer)
+        //val field = "plainText"
         val terms= q.split("\\s+".toRegex()).map { Term(field, it) }.map {
             when(it.text()) {
                 "*" -> WildcardQuery(it)
@@ -130,7 +131,7 @@ class WorkIndex {
         val s = sm.acquire()
         sm.release(s)
 
-        search("Polonius", "hamlet", Index.chapters)
+        search("Polonius", "hamlet", "name", Index.chapters)
 
         return DocValuesSearcher(s).get(docId)
     }

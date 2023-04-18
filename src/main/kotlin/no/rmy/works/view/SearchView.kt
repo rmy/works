@@ -8,10 +8,11 @@ import no.rmy.works.Works
 import no.rmy.works.lucene.WorkIndex
 import no.rmy.works.oss.schema.Work
 import no.rmy.works.oss.schema.Role
+import java.util.*
 
 fun Route.searchRoutes() {
     route("q") {
-        get() {
+        get {
             val q = call.parameters["q"]
             call.respondHtmlTemplate(LayoutTemplate()) {
                 header { +"Search" }
@@ -26,7 +27,7 @@ fun Route.searchRoutes() {
                             }
 
                             q?.let { q ->
-                                val docs = Works.workIndex.search(q)
+                                val docs = Works.workIndex.search(q.lowercase(Locale.ENGLISH), field = "lowerCaseText")
                                 val ms = Works.workIndex.managedSearcher(WorkIndex.Index.paragraphs)
                                 p {
                                     "Total hits: "
@@ -79,7 +80,7 @@ fun Route.searchRoutes() {
                             }
 
                             q?.let { q ->
-                                val docs = Works.workIndex.search(q)
+                                val docs = Works.workIndex.search(q.lowercase(Locale.ENGLISH), field = "lowerCaseText")
                                 val ms = Works.workIndex.managedSearcher(WorkIndex.Index.paragraphs)
                                 p {
                                     "Total hits: "

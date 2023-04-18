@@ -7,6 +7,7 @@ import no.rmy.works.oss.schema.Chapter
 import no.rmy.works.oss.schema.Role
 import no.rmy.works.oss.schema.Paragraph
 import no.rmy.works.oss.schema.Work
+import java.util.*
 
 fun Work.toLuceneDoc(): Document {
     val doc = Document()
@@ -65,6 +66,7 @@ fun Paragraph.toLuceneDoc(): Document {
         StringField("workIdx", workId, Field.Store.YES),
         StringField("charId", this.charId, Field.Store.YES),
         TextField("plainText", plainText, Field.Store.YES),
+        TextField("lowerCaseText", plainText.lowercase(Locale.ENGLISH), Field.Store.YES),
         TextField("phoneticText", phoneticText, Field.Store.YES),
         TextField("stemText", stemText, Field.Store.YES),
         StoredField("chapter", chapter),
