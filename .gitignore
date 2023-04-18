@@ -1,0 +1,9 @@
+.gradle/
+.idea/
+build/
+gradle/
+*~
+*.idx
+/lucene
+nohup
+works-1.0-SNAPSHOT
